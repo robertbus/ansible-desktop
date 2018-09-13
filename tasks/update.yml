@@ -1,0 +1,9 @@
+---
+- name: Update system to latest
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    autoremove: yes
+    update_cache: yes
+    upgrade: full
