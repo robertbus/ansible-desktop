@@ -1,9 +1,14 @@
 #!/bin/sh
 
-apt-get update
-apt-get -y install software-properties-common
-apt-add-repository -y ppa:ansible/ansible
-apt-get update
-apt-get -y install ansible git
+SUDO=''
+if (( $EUID != 0 )); then
+    SUDO='sudo'
+fi
+
+$SUDO apt-get update
+$SUDO apt-get -y install software-properties-common
+$SUDO apt-add-repository -y ppa:ansible/ansible
+$SUDO apt-get update
+$SUDO apt-get -y install ansible git
 
 ansible-pull -U https://github.com/robertbus/ansible-desktop.git -i localhost, setup.yml

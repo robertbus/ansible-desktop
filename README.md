@@ -7,5 +7,5 @@ This repository contains [Ansible](https://www.ansible.com/) playbooks to set up
 Run this on a freshly installed Ubuntu to set up everything:
 
 ```
-curl https://raw.githubusercontent.com/robertbus/ansible-desktop/master/bootstrap.sh | sudo sh
+curl https://raw.githubusercontent.com/robertbus/ansible-desktop/master/bootstrap.sh | sh
 ```
