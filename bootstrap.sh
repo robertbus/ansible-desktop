@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SUDO=''
 if (( $EUID != 0 )); then
