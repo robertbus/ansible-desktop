@@ -1,8 +1,8 @@
 ---
-- hosts: localhost
+- name: Set up Ubuntu desktop
+  hosts: localhost
   connection: local
 
-  tasks:
-    - import_tasks: tasks/update.yml
-    - import_tasks: tasks/fish.yml
-    - import_tasks: tasks/appearance.yml
+- import_playbook: ubuntu/update.yml
+- import_playbook: ubuntu/fish.yml
+- import_playbook: ubuntu/appearance.yml
