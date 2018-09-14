@@ -8,4 +8,7 @@
     - fish
 
 - name: Set fish as default shell
-  command: chsh -s /usr/bin/fish
+  become: yes
+  become_user: root
+  become_method: sudo
+  command: chsh -s /usr/bin/fish {{ ansible_user_id }}
