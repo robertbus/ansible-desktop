@@ -8,4 +8,4 @@
     - fish
 
 - name: Set fish as default shell
-  command: chsh -s $(which fish)
+  command: chsh -s /usr/bin/fish
