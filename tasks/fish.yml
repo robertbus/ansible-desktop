@@ -1,0 +1,11 @@
+---
+- name: Install Fish shell
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt: name={{item}} state=present
+  with_items:
+    - fish
+
+- name: Set fish as default shell
+  command: chsh -s $(which fish)
