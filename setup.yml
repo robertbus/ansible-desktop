@@ -4,3 +4,4 @@
 
   tasks:
     - import_tasks: tasks/update.yml
+    - import_tasks: tasks/appearance.yml
