@@ -18,3 +18,5 @@
         - gnome-disk-utility
         # programming
         - meld
+        # files
+        - mc
