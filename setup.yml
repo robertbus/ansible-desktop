@@ -5,6 +5,7 @@
 
 - import_playbook: ubuntu/update.yml
 - import_playbook: ubuntu/appearance.yml
+- import_playbook: ubuntu/packages.yml
 - import_playbook: ubuntu/fish.yml
 - import_playbook: ubuntu/atom.yml
 - import_playbook: ubuntu/insync.yml
