@@ -15,5 +15,6 @@
         - htop
         - iotop
         - dstat
+        - gnome-disk-utility
         # programming
         - meld
