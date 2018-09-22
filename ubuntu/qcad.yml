@@ -1,0 +1,33 @@
+---
+- name: Set up QCAD
+  hosts: localhost
+  vars:
+    tmpDir: /tmp/myPlaybook/qcad
+    appVersion: "3.21.3"
+    appName: "qcad-{{appVersion}}-trial-linux-x86_64"
+    appInstaller: "{{appName}}.run"
+    appUrl: "https://www.qcad.org/archives/qcad/{{appInstaller}}"
+
+  tasks:
+    - name: Create temporary work directory
+      file: path={{tmpDir}} state=directory mode=0755
+
+    - name: Download QCAD installer
+      get_url:
+        url: "{{appUrl}}"
+        dest: "{{tmpDir}}/{{appInstaller}}"
+        mode: 0744
+
+    - name: Run installer
+      command: chdir={{tmpDir}} ./{{appInstaller}}
+
+    - name: Remove professional plugins to revert to Community Edition
+      file: path=/home/{{ansible_user_id}}/opt/{{appName}}/{{item}} state=absent
+      with_items:
+        - plugins/libqcaddwg.so
+        - plugins/libqcadpolygon.so
+        - plugins/libqcadproscripts.so
+        - plugins/libqcadtriangulation.so
+
+    - name: Cleanup
+      file: path={{tmpDir}} state=absent
