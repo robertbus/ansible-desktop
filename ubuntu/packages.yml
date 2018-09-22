@@ -9,7 +9,8 @@
       become_method: sudo
       apt: name={{item}} state=present
       with_items:
-        # sytem debugging
+        # sytem utils
+        - gparted
         - htop
         # programming
         - meld
