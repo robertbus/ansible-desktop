@@ -1,0 +1,23 @@
+---
+- name: Set up Insync (https://www.insynchq.com/)
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Add Insync GPG key to allow apt to authenticate the Insync repository
+      apt_key: keyserver=keyserver.ubuntu.com id=ACCAF35C state=present validate_certs=yes
+
+    - name: Install Insync APT source list
+      copy: src=insync.list dest=/etc/apt/sources.list.d/insync.list mode=0644
+
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+    - name: Install Insync Google Drive client
+      apt: name={{item}} state=present
+      with_items:
+        - insync
+        - insync-thunar
