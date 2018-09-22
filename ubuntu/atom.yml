@@ -13,6 +13,9 @@
     - name: Install Atom packages
       command: apm install {{item}}
       with_items:
+        # yaml
+        - ide-yaml
+        - atom-ide-ui
         # linter
         - linter
         - linter-ui-default
@@ -32,3 +35,7 @@
         - linter-docker
         # terminal
         - platformio-ide-terminal
+        # ansible
+        - language-ansible
+        - linter-ansible-linting
+        - autocomplete-ansible
