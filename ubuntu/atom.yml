@@ -1,0 +1,34 @@
+---
+- name: Set up Atom text editor
+  hosts: localhost
+
+  tasks:
+    - name: Install Atom text editor
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        deb: https://atom.io/download/deb
+
+    - name: Install Atom packages
+      command: apm install {{item}}
+      with_items:
+        # linter
+        - linter
+        - linter-ui-default
+        - intentions
+        - busy-signal
+        # git
+        - git-plus
+        # asciidoc
+        - asciidoc-assistant
+        - language-asciidoc
+        - asciidoc-preview
+        - autocomplete-asciidoc
+        - asciidoc-image-helper
+        # docker
+        - docker
+        - language-docker
+        - linter-docker
+        # terminal
+        - platformio-ide-terminal
