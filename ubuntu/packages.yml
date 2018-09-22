@@ -11,6 +11,7 @@
       with_items:
         # sytem utils
         - gparted
+        - usb-creator-gtk
         - htop
         # programming
         - meld
