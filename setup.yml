@@ -4,5 +4,6 @@
   connection: local
 
 - import_playbook: ubuntu/update.yml
-- import_playbook: ubuntu/fish.yml
 - import_playbook: ubuntu/appearance.yml
+- import_playbook: ubuntu/fish.yml
+- import_playbook: ubuntu/atom.yml
