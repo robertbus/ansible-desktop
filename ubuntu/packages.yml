@@ -10,12 +10,14 @@
       apt: name={{item}} state=present
       with_items:
         # sytem utils
-        - gparted
         - usb-creator-gtk
         - htop
         - iotop
         - dstat
+        # disk utils
+        - gparted
         - gnome-disk-utility
+        - smartmontools
         # programming
         - meld
         # files
