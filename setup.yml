@@ -10,3 +10,4 @@
 - import_playbook: ubuntu/atom.yml
 - import_playbook: ubuntu/insync.yml
 - import_playbook: ubuntu/qcad.yml
+- import_playbook: ubuntu/skype.yml
