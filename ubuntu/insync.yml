@@ -1,5 +1,5 @@
 ---
-- name: Set up Insync (https://www.insynchq.com/)
+- name: Set up Insync Google Drive desktop integration (https://www.insynchq.com/)
   hosts: localhost
   become: yes
   become_user: root

@@ -1,9 +1,9 @@
 ---
-- name: Set up Skype
+- name: Set up Skype messaging application (https://www.skype.com/)
   hosts: localhost
 
   tasks:
-    - name: Install Skype from web
+    - name: Install Skype messaging application from web
       become: yes
       become_user: root
       become_method: sudo

@@ -1,5 +1,5 @@
 ---
-- name: Set up QCAD
+- name: Set up QCAD for computer-aided drafting (https://www.qcad.org/)
   hosts: localhost
   vars:
     tmpDir: /tmp/myPlaybook/qcad
@@ -18,10 +18,10 @@
         dest: "{{tmpDir}}/{{appInstaller}}"
         mode: 0744
 
-    - name: Run installer
+    - name: Run QCAD installer
       command: chdir={{tmpDir}} ./{{appInstaller}}
 
-    - name: Remove professional plugins to revert to Community Edition
+    - name: Remove QCAD professional plugins to revert to Community Edition
       file: path=/home/{{ansible_user_id}}/opt/{{appName}}/{{item}} state=absent
       with_items:
         - plugins/libqcaddwg.so
