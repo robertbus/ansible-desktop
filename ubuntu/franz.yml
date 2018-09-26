@@ -1,0 +1,15 @@
+---
+- name: Set up Franz messaging application (https://meetfranz.com/)
+  hosts: localhost
+  vars:
+    appVersion: "5.0.0-beta.18"
+    appPackage: "franz_{{appVersion}}_amd64.deb"
+    appPackageUrl: "https://github.com/meetfranz/franz/releases/download/v{{appVersion}}/{{appPackage}}"
+
+  tasks:
+    - name: Install Franz messaging application from web
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        deb: "{{appPackageUrl}}"
