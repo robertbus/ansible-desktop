@@ -10,7 +10,10 @@
 
   tasks:
     - name: Create temporary work directory
-      file: path={{tmpDir}} state=directory mode=0755
+      file:
+        path: "{{tmpDir}}"
+        state: directory
+        mode: 0755
 
     - name: Download QCAD installer
       get_url:
@@ -22,7 +25,9 @@
       command: chdir={{tmpDir}} ./{{appInstaller}}
 
     - name: Remove QCAD professional plugins to revert to Community Edition
-      file: path=/home/{{ansible_user_id}}/opt/{{appName}}/{{item}} state=absent
+      file:
+        path: "/home/{{ansible_user_id}}/opt/{{appName}}/{{item}}"
+        state: absent
       with_items:
         - plugins/libqcaddwg.so
         - plugins/libqcadpolygon.so
@@ -30,4 +35,6 @@
         - plugins/libqcadtriangulation.so
 
     - name: Cleanup
-      file: path={{tmpDir}} state=absent
+      file:
+        path: "{{tmpDir}}"
+        state: absent
