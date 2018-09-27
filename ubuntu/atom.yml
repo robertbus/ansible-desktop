@@ -1,5 +1,5 @@
 ---
-- name: Set up Atom text editor
+- name: Set up Atom text editor (https://atom.io/)
   hosts: localhost
 
   tasks:
