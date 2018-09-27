@@ -7,17 +7,23 @@
 
   tasks:
     - name: Add Insync GPG key to allow apt to authenticate the Insync repository
-      apt_key: keyserver=keyserver.ubuntu.com id=ACCAF35C state=present validate_certs=yes
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: ACCAF35C
+        state: present
+        validate_certs: yes
 
-    - name: Install Insync APT source list
-      copy: src=insync.list dest=/etc/apt/sources.list.d/insync.list mode=0644
-
-    - name: Update repositories cache
-      apt:
-        update_cache: yes
+    - name: Add Insync APT list
+      apt_repository:
+        repo: deb http://apt.insynchq.com/ubuntu bionic non-free contrib
+        state: present
+        filename: insync
 
     - name: Install Insync Google Drive client
-      apt: name={{item}} state=present
+      apt:
+        name: "{{item}}"
+        state: present
+        update_cache: yes
       with_items:
         - insync
         - insync-thunar
