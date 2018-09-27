@@ -11,3 +11,6 @@
 - import_playbook: ubuntu/insync.yml
 - import_playbook: ubuntu/qcad.yml
 - import_playbook: ubuntu/skype.yml
+- import_playbook: ubuntu/franz.yml
+- import_playbook: ubuntu/docker.yml
+- import_playbook: ubuntu/intellij_idea.yml

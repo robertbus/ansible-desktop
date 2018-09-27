@@ -1,0 +1,39 @@
+---
+- name: Set up IntelliJ IDEA
+  hosts: localhost
+  vars:
+    appVersion: "2018.2.4"
+    appPackage: "ideaIU-{{appVersion}}.tar.gz"
+    appPackageUrl: "https://download.jetbrains.com/idea/{{appPackage}}"
+
+  tasks:
+    - name: Download IntelliJ IDEA
+      unarchive:
+        src: "{{appPackageUrl}}"
+        dest: "/home/{{ansible_user_id}}/opt/"
+        remote_src: yes
+
+#    - name: Get IDEA directory name
+#      shell: chdir="/home/{{ansible_user_id}}/opt/" ls -1 | grep idea-IU
+#      register: idea_dir
+#
+#    - name: Create soft link to IDEA directory
+#      file:
+#        src: "/home/{{ansible_user_id}}/opt/{{idea_dir.stdout}}"
+#        dest: "/home/{{ansible_user_id}}/opt/idea"
+#        state: link
+#
+#    - name: Create .desktop file
+#      copy:
+#        dest: "/home/{{ansible_user_id}}/.local/share/applications/idea.desktop"
+#        content: |
+#          [Desktop Entry]
+#          Version=1.0
+#          Type=Application
+#          Name=IntelliJ IDEA Ultimate Edition
+#          Icon=/home/{{ansible_user_id}}/opt/idea/bin/idea.png
+#          Exec="/home/{{ansible_user_id}}/opt/idea/bin/idea.sh" %f
+#          Comment=Capable and Ergonomic IDE for JVM
+#          Categories=Development;IDE;
+#          Terminal=false
+#          StartupWMClass=jetbrains-idea
