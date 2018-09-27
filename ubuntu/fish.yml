@@ -13,9 +13,19 @@
         update_cache: yes
       with_items:
         - fish
+        - curl
 
-    - name: Set fish as default shell
+    - name: Set fish as default shell for current user
       become: yes
       become_user: root
       become_method: sudo
       command: chsh -s /usr/bin/fish {{ansible_user_id}}
+
+    - name: Install Fisherman, the fish-shell plugin manager
+      command: curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
+
+    - name: Add Fish plugins
+      command: fish -c "fisher {{item}}"
+      with_items:
+        - patrickf3139/Colored-Man-Pages
+        - brgmnn/fish-docker-compose
