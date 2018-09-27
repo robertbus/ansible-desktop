@@ -7,7 +7,10 @@
       become: yes
       become_user: root
       become_method: sudo
-      apt: name={{item}} state=present
+      apt:
+        name: "{{item}}"
+        state: present
+        update_cache: yes
       with_items:
         # sytem utils
         - usb-creator-gtk
