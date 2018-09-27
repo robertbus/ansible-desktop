@@ -22,3 +22,5 @@
         - meld
         # files
         - mc
+        # images
+        - catimg
