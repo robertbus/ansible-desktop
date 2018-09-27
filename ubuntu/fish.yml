@@ -22,7 +22,9 @@
       command: chsh -s /usr/bin/fish {{ansible_user_id}}
 
     - name: Install Fisherman, the fish-shell plugin manager
-      command: curl -Lo /home/{{ansible_user_id}}/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
+      get_url:
+        url: https://git.io/fisher
+        dest: "/home/{{ansible_user_id}}/.config/fish/functions/fisher.fish"
 
     - name: Add Fish plugins
       command: fish -c "fisher {{item}}"
