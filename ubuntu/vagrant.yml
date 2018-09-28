@@ -1,0 +1,61 @@
+---
+- name: Set up Vagrant virtual machine environment manager (https://www.vagrantup.com/)
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars:
+    tmpDir: /tmp/myPlaybook/vagrant
+    appVersion: "2.1.5"
+    # files
+    appPackage: "vagrant_{{appVersion}}_x86_64.deb"
+    sha256Sums: "vagrant_{{appVersion}}_SHA256SUMS"
+    sha256SumsSig: "vagrant_{{appVersion}}_SHA256SUMS.sig"
+    # URLs
+    appPackageUrl: "https://releases.hashicorp.com/vagrant/{{appVersion}}/{{appPackage}}"
+    sha256SumsUrl: "https://releases.hashicorp.com/vagrant/{{appVersion}}/{{sha256Sums}}"
+    sha256SumsSigUrl: "https://releases.hashicorp.com/vagrant/{{appVersion}}/{{sha256SumsSig}}"
+
+  tasks:
+    - name: Create temporary work directory
+      file:
+        path: "{{tmpDir}}"
+        state: directory
+
+    - name: Download Vagrant GPG public key
+      get_url:
+        url: https://keybase.io/hashicorp/pgp_keys.asc
+        dest: "{{tmpDir}}/hashicorp.asc"
+
+    - name: Import Vagrant GPG public key
+      command: chdir={{tmpDir}} gpg --import hashicorp.asc
+
+    - name: Download Vagrant DEB package
+      get_url:
+        url: "{{appPackageUrl}}"
+        dest: "{{tmpDir}}/{{appPackage}}"
+
+    - name: Download Vagrant SHA256SUMS file
+      get_url:
+        url: "{{sha256SumsUrl}}"
+        dest: "{{tmpDir}}/{{sha256Sums}}"
+
+    - name: Download Vagrant SHA256SUMS.sig file
+      get_url:
+        url: "{{sha256SumsSigUrl}}"
+        dest: "{{tmpDir}}/{{sha256SumsSig}}"
+
+    - name: Verify the signature file is untampered
+      command: chdir={{tmpDir}} gpg --verify {{sha256SumsSig}} {{sha256Sums}}
+
+    - name: Verify the SHASUM matches the binary
+      shell: chdir={{tmpDir}} grep {{appPackage}} {{sha256Sums}} | shasum -a 256 -c
+
+    - name: Install Vagrant virtual machine environment manager
+      apt:
+        deb: "{{tmpDir}}/{{appPackage}}"
+
+    - name: Cleanup
+      file:
+        path: "{{tmpDir}}"
+        state: absent
