@@ -1,3 +1,4 @@
 *.retry
 *.iml
 .idea
+.vagrant
