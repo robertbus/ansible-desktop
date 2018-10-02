@@ -27,3 +27,5 @@
         - mc
         # images
         - catimg
+        # desktop utils
+        - synapse
