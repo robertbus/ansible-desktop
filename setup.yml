@@ -12,6 +12,7 @@
 - import_playbook: ubuntu/qcad.yml
 - import_playbook: ubuntu/skype.yml
 - import_playbook: ubuntu/franz.yml
+- import_playbook: ubuntu/zoom.yml
 - import_playbook: ubuntu/docker.yml
 - import_playbook: ubuntu/virtualbox.yml
 - import_playbook: ubuntu/vagrant.yml
