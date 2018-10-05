@@ -21,6 +21,11 @@
       become_method: sudo
       command: chsh -s /usr/bin/fish {{ansible_user_id}}
 
+    - name: Create ~/.config/fish/functions
+      file:
+        path: "/home/{{ansible_user_id}}/.config/fish/functions"
+        state: directory
+
     - name: Install Fisherman, the fish-shell plugin manager
       get_url:
         url: https://git.io/fisher
