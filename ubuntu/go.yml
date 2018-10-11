@@ -1,0 +1,28 @@
+---
+- name: Install Go programming language and related tools
+  hosts: localhost
+  vars:
+    gopath: "/home/{{ansible_user_id}}/Projects/go"
+
+  tasks:
+    - name: Install packages
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - golang
+          - golang-golang-x-tools
+          - govendor
+          - gox
+          - go-dep
+        state: present
+        update_cache: yes
+
+    - name: Create GOPATH directory
+      file:
+        path: "{{gopath}}"
+        state: directory
+
+    - name: Set GOPATH in Fish shell
+      command: fish -c "set -x -U GOPATH {{gopath}}"
