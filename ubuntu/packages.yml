@@ -8,26 +8,25 @@
       become_user: root
       become_method: sudo
       apt:
-        name: "{{item}}"
+        name:
+          # sytem utils
+          - usb-creator-gtk
+          - htop
+          - iotop
+          - dstat
+          # disk utils
+          - gparted
+          - gnome-disk-utility
+          - smartmontools
+          # programming
+          - meld
+          # files
+          - mc
+          # images
+          - catimg
+          # desktop utils
+          - synapse
+          # drawing utils
+          - graphviz
         state: present
         update_cache: yes
-      with_items:
-        # sytem utils
-        - usb-creator-gtk
-        - htop
-        - iotop
-        - dstat
-        # disk utils
-        - gparted
-        - gnome-disk-utility
-        - smartmontools
-        # programming
-        - meld
-        # files
-        - mc
-        # images
-        - catimg
-        # desktop utils
-        - synapse
-        # drawing utils
-        - graphviz
