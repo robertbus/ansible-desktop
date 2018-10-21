@@ -29,3 +29,5 @@
         - catimg
         # desktop utils
         - synapse
+        # drawing utils
+        - graphviz
