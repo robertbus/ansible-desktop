@@ -1,0 +1,7 @@
+---
+- name: Set up a basic Ubuntu desktop
+  hosts: localhost
+  connection: local
+
+- import_playbook: ubuntu/update.yml
+- import_playbook: ubuntu/fish.yml
