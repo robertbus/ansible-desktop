@@ -8,12 +8,11 @@
       become_user: root
       become_method: sudo
       apt:
-        name: "{{item}}"
+        name:
+          - fish
+          - curl
         state: present
         update_cache: yes
-      with_items:
-        - fish
-        - curl
 
     - name: Set fish as default shell for current user
       become: yes

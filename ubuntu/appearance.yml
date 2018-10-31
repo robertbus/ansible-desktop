@@ -8,12 +8,11 @@
       become_user: root
       become_method: sudo
       apt:
-        name: "{{item}}"
+        name:
+          - numix-blue-gtk-theme
+          - numix-icon-theme
         state: present
         update_cache: yes
-      with_items:
-        - numix-blue-gtk-theme
-        - numix-icon-theme
 
     - name: Set XFCE theme to Numix Blue
       command: xfconf-query -c xsettings -p /Net/ThemeName -s "NumixBlue"
