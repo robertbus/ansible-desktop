@@ -1,0 +1,23 @@
+---
+- name: Set up ImageMagick
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Install ImageMagick
+      apt:
+        name:
+          - imagemagick
+        state: present
+        update_cache: yes
+
+    - name: Backup /etc/ImageMagick-6/policy.xml
+      copy:
+        src: /etc/ImageMagick-6/policy.xml
+        dest: /etc/ImageMagick-6/policy.xml.bak
+
+    # SEE: https://stackoverflow.com/questions/42928765/convertnot-authorized-aaaa-error-constitute-c-readimage-453
+    - name: Fix 'convert:not authorized' bug for PDF output
+      command: sed -i 's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read|write" pattern="PDF" \/>/g' /etc/ImageMagick-6/policy.xml
