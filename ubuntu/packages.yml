@@ -24,6 +24,7 @@
           - mc
           # images
           - catimg
+          - gimp
           # desktop utils
           - synapse
           # drawing utils
