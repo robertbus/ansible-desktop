@@ -1,0 +1,31 @@
+---
+- name: Set up GNU Image Manipulation Program
+  hosts: localhost
+
+  tasks:
+    - name: Install GIMP
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - gimp
+        state: present
+        update_cache: yes
+
+    # NOTE: the version migth change over time, so this hard coded approach will fail eventually
+    # TODO: get version on the fly: $ apt-cache show gimp | grep Version | cut -d' ' -f2 | cut -d'.' -f1,2
+    - name: Create ~/.gimp-2.8/scripts directory
+      file:
+        path: "/home/{{ansible_user_id}}/.gimp-2.8/scripts"
+        state: directory
+
+    - name: Install National Geographic Script
+      get_url:
+        url: https://sites.google.com/site/elsamuko/gimp/ng/elsamuko-national-geographic.scm?attredirects=0&d=1
+        dest: "/home/{{ansible_user_id}}/.gimp-2.8/scripts/elsamuko-national-geographic.scm"
+
+    - name: Install National Geographic Batch Script
+      get_url:
+        url: https://sites.google.com/site/elsamuko/gimp/ng/elsamuko-national-geographic-batch.scm?attredirects=0&d=1
+        dest: "/home/{{ansible_user_id}}/.gimp-2.8/scripts/elsamuko-national-geographic-batch.scm"
