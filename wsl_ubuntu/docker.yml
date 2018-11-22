@@ -1,0 +1,99 @@
+---
+# TODO: depends on go being present on the system, need checks around that
+- name: Set up WSL Interoperability with Docker (https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/)
+  hosts: localhost
+
+  tasks:
+    - fail:
+        msg: "Bailing out, this play requires 'windows_user' variable."
+      when: windows_user is not defined
+
+    - name: Uninstall any previous Docker package
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name: 
+          - docker
+          - docker-engine
+          - docker.io
+        state: absent
+
+    - name: Get npiperelay
+      command: go get -d github.com/jstarks/npiperelay
+
+    - name: Build npiperelay for the windows_user
+      command: env GOOS=windows go build -o /mnt/c/Users/{{windows_user}}/go/bin/npiperelay.exe github.com/jstarks/npiperelay
+
+    - name: Symlink npiperelay for windows_user
+      become: yes
+      become_user: root
+      become_method: sudo
+      file:
+        src: /mnt/c/Users/{{windows_user}}/go/bin/npiperelay.exe
+        dest: /usr/local/bin/npiperelay.exe
+        state: link
+
+    - name: Install packages to allow apt to use a repository over HTTPS
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key to allow apt to authenticate the Docker repository
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt_key:
+         url: https://download.docker.com/linux/ubuntu/gpg
+         id: 0EBFCD88
+         state: present
+         validate_certs: yes
+
+    - name: Add Docker APT list
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+        filename: docker
+
+    - name: Install Docker
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - docker-ce-cli
+          - docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Add the current user to the 'docker' group
+      become: yes
+      become_user: root
+      become_method: sudo
+      command: usermod -aG docker {{ansible_user_id}}
+
+    - name: 
+      copy:
+       content: |
+                #!/bin/sh
+                exec socat UNIX-LISTEN:/var/run/docker.sock,fork,group=docker,umask=007 EXEC:"npiperelay.exe -ep -s //./pipe/docker_engine",nofork
+       dest: /home/{{ansible_user_id}}/docker-relay
+       mode: 0744
+
+    - name: Add the current user to the 'docker' group
+      become: yes
+      become_user: root
+      become_method: sudo
+      command: usermod -aG docker {{ansible_user_id}}
+
