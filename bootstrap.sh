@@ -19,5 +19,7 @@ mkdir -p $DEST
 
 ansible-pull -d $DEST -i localhost -U $URL $PLAY
 
+cd $DEST
 . $DEST/help.sh
+cd -
 
