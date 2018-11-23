@@ -1,12 +1,12 @@
 ---
-# TODO: depends on go being present on the system, need checks around that
-- name: Set up WSL Interoperability with Docker (https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/)
+# SEE: https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/
+- name: Set up WSL Interoperability with Docker
   hosts: localhost
 
   tasks:
     - fail:
-        msg: "Bailing out, this play requires 'windows_user' variable."
-      when: windows_user is not defined
+        msg: 'Bailing out, this play requires "windows_username" variable set to your Windows username. Example usage of this playbook: ansible-playbook -vv --ask-become-pass --extra-vars "windows_username=<your Windows username>" wsl_ubuntu/docker.yml'
+      when: windows_username is not defined
 
     - name: Uninstall any previous Docker package
       become: yes
@@ -19,18 +19,28 @@
           - docker.io
         state: absent
 
-    - name: Get npiperelay
+    - name: Install go language
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - golang
+        state: present
+        update_cache: yes
+
+    - name: Get the source for npiperelay 
       command: go get -d github.com/jstarks/npiperelay
 
-    - name: Build npiperelay for the windows_user
-      command: env GOOS=windows go build -o /mnt/c/Users/{{windows_user}}/go/bin/npiperelay.exe github.com/jstarks/npiperelay
+    - name: Build npiperelay for windows_username
+      command: env GOOS=windows go build -o /mnt/c/Users/{{windows_username}}/go/bin/npiperelay.exe github.com/jstarks/npiperelay
 
-    - name: Symlink npiperelay for windows_user
+    - name: Symlink npiperelay for windows_username
       become: yes
       become_user: root
       become_method: sudo
       file:
-        src: /mnt/c/Users/{{windows_user}}/go/bin/npiperelay.exe
+        src: /mnt/c/Users/{{windows_username}}/go/bin/npiperelay.exe
         dest: /usr/local/bin/npiperelay.exe
         state: link
 
@@ -66,7 +76,7 @@
         state: present
         filename: docker
 
-    - name: Install Docker
+    - name: Install Docker command line tools
       become: yes
       become_user: root
       become_method: sudo
@@ -77,13 +87,23 @@
         state: present
         update_cache: yes
 
-    - name: Add the current user to the 'docker' group
+    - name: Add the current WSL user to the 'docker' group
       become: yes
       become_user: root
       become_method: sudo
       command: usermod -aG docker {{ansible_user_id}}
 
-    - name: 
+    - name: Install socat
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - socat
+        state: present
+        update_cache: yes
+      
+    - name: Create docker-relay script
       copy:
        content: |
                 #!/bin/sh
@@ -91,9 +111,17 @@
        dest: /home/{{ansible_user_id}}/docker-relay
        mode: 0744
 
-    - name: Add the current user to the 'docker' group
-      become: yes
-      become_user: root
-      become_method: sudo
-      command: usermod -aG docker {{ansible_user_id}}
+    - name: Print info about usage of the docker-relay script
+      debug:
+        msg:
+          - "Windows Subsystem for Linux interoperability with Docker should be set up now. To test it open a new WSL shell to ensure your group membership is reset. Launch the relay in the background:"
+          - ""
+          - "  $ sudo ~/docker-relay &"
+          - ""
+          - "Now, run a docker command to test the waters. You should be greeted by the same output as if you ran the command from Windows."
+          - ""
+          - "With the recent addition of background processes in WSL, you can close out of WSL, open it later, and the relay we have built will continue to run. However, if you kill the socat process or do a hard reboot of your system, you will need to make sure you launch the relay in the background again when you first launch WSL."
+          - ""
+          - "For details about how does this work, see this article:"
+          - "https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/"
 
