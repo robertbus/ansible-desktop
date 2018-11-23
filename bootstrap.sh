@@ -11,4 +11,4 @@ $SUDO apt-add-repository -y ppa:ansible/ansible
 $SUDO apt-get update
 $SUDO apt-get -y install ansible git
 
-ansible-pull -U https://github.com/robertbus/ansible-desktop.git -i localhost, base.yml
+ansible-pull -U https://github.com/robertbus/ansible-desktop.git -i localhost, ubuntu/update.yml
