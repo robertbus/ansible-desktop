@@ -12,3 +12,6 @@ $SUDO apt-get update
 $SUDO apt-get -y install ansible git
 
 ansible-pull -U https://github.com/robertbus/ansible-desktop.git -i localhost, ubuntu/update.yml
+
+./help.sh
+
