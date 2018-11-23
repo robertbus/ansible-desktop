@@ -1,5 +1,5 @@
 ---
-- name: Set up Ubuntu desktop
+- name: Provision my home desktop computer
   hosts: localhost
   connection: local
 
@@ -17,3 +17,4 @@
 - import_playbook: ubuntu/virtualbox.yml
 - import_playbook: ubuntu/vagrant.yml
 - import_playbook: ubuntu/intellij_idea.yml
+
