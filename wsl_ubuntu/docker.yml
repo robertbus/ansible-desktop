@@ -87,6 +87,12 @@
         state: present
         update_cache: yes
 
+    - name: Add docker group
+      become: yes
+      become_user: root
+      become_method: sudo
+      command: groupadd docker
+
     - name: Add the current WSL user to the 'docker' group
       become: yes
       become_user: root
