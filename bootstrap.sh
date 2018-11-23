@@ -1,5 +1,9 @@
 #!/bin/bash
 
+URL=https://github.com/robertbus/ansible-desktop.git
+DEST=~/.ansible-desktop
+PLAY=ubuntu/update.yml
+
 SUDO=''
 if (( $EUID != 0 )); then
     SUDO='sudo'
@@ -11,7 +15,9 @@ $SUDO apt-add-repository -y ppa:ansible/ansible
 $SUDO apt-get update
 $SUDO apt-get -y install ansible git
 
-ansible-pull -U https://github.com/robertbus/ansible-desktop.git -i localhost, ubuntu/update.yml
+mkdir -p $DEST
 
-./help.sh
+ansible-pull -d $DEST -i localhost -U $URL $PLAY
+
+. $DEST/help.sh
 
