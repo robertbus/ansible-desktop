@@ -1,0 +1,15 @@
+---
+- name: Set up fonts
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Install fonts
+      apt:
+        name:
+          - fonts-hack
+          - fonts-inconsolata
+        state: present
+        update_cache: yes
