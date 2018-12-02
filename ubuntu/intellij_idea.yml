@@ -2,7 +2,7 @@
 - name: Set up IntelliJ IDEA
   hosts: localhost
   vars:
-    appVersion: "2018.2.4"
+    appVersion: "2018.3"
     appPackage: "ideaIU-{{appVersion}}.tar.gz"
     appPackageUrl: "https://download.jetbrains.com/idea/{{appPackage}}"
 
