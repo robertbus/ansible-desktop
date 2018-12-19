@@ -1,0 +1,15 @@
+---
+- name: Set up CLI file archiving tools
+  hosts: localhost
+
+  tasks:
+    - name: Install file archiving tools
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - gzip
+          - unzip
+        state: present
+        update_cache: yes
