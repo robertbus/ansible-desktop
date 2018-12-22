@@ -1,0 +1,20 @@
+---
+- name: Set up WoeUSB (https://github.com/slacka/WoeUSB)
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Add WebUpd8 APT list
+      apt_repository:
+        repo: ppa:nilarimogard/webupd8
+        state: present
+        filename: webupd8
+
+    - name: Install Insync Google Drive client
+      apt:
+        name:
+          - woeusb
+        state: present
+        update_cache: yes
