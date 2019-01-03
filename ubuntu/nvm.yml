@@ -1,0 +1,10 @@
+---
+- name: Set up Node Version Manager
+  hosts: localhost
+
+  tasks:
+    - name: Install Node Version Manager
+      shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
