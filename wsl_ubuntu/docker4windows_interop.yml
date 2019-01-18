@@ -1,6 +1,6 @@
 ---
 # SEE: https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/
-- name: Set up WSL Interoperability with Docker
+- name: Set up WSL Interoperability with Docker for Windows
   hosts: localhost
 
   tasks:
