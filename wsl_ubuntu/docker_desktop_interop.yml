@@ -1,11 +1,11 @@
 ---
 # SEE: https://blogs.msdn.microsoft.com/commandline/2017/12/08/cross-post-wsl-interoperability-with-docker/
-- name: Set up WSL Interoperability with Docker for Windows
+- name: Set up Windows Subsystem for Linux interoperability with Docker Desktop for Windows
   hosts: localhost
 
   tasks:
     - fail:
-        msg: 'Bailing out, this play requires "windows_username" variable set to your Windows username. Example usage of this playbook: ansible-playbook -vv --ask-become-pass --extra-vars "windows_username=<your Windows username>" wsl_ubuntu/docker.yml'
+        msg: 'Bailing out, this play requires "windows_username" variable set to your Windows username. Example usage of this playbook: ansible-playbook -vv --ask-become-pass --extra-vars "windows_username=<your Windows username>" wsl_ubuntu/docker_desktop_interop.yml'
       when: windows_username is not defined
 
     - name: Uninstall any previous Docker package
