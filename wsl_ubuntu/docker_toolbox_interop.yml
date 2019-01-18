@@ -1,0 +1,116 @@
+---
+# SEE: https://medium.freecodecamp.org/how-to-set-up-docker-and-windows-subsystem-for-linux-a-love-story-35c856968991
+#      https://blog.jreypo.io/containers/microsoft/windows%2010/my-docker-workflow-in-wsl/
+- name: Set up Windows Subsystem for Linux interoperability with Docker Toolbox for Windows
+  hosts: localhost
+
+  tasks:
+    - fail:
+        msg: 'Bailing out, this play requires "windows_username" variable set to your Windows username. Example usage of this playbook: ansible-playbook -vv --ask-become-pass --extra-vars "windows_username=<your Windows username>" wsl_ubuntu/docker_toolbox_interop.yml'
+      when: windows_username is not defined
+
+    - name: Uninstall any previous Docker package
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - docker
+          - docker-engine
+          - docker.io
+        state: absent
+
+    - name: Install packages to allow apt to use a repository over HTTPS
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key to allow apt to authenticate the Docker repository
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt_key:
+         url: https://download.docker.com/linux/ubuntu/gpg
+         id: 0EBFCD88
+         state: present
+         validate_certs: yes
+
+    - name: Add Docker APT list
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+        filename: docker
+
+    - name: Install Docker CLI tools only
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - docker-ce-cli
+          - docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Add docker group
+      become: yes
+      become_user: root
+      become_method: sudo
+      command: groupadd docker
+
+    - name: Add the current WSL user to the 'docker' group
+      become: yes
+      become_user: root
+      become_method: sudo
+      command: usermod -aG docker {{ansible_user_id}}
+
+    - name: Change mount point for host drives from '/mnt/<drive_letter>' to '/<drive_letter>'
+      become: yes
+      become_user: root
+      become_method: sudo
+      copy:
+        content: |
+                 [automount]
+                 root = /
+                 options = "metadata"
+        dest: /etc/wsl.conf
+
+    - name: Create user bin directory
+      file:
+        path: "/home/{{ansible_user_id}}/bin"
+        state: directory
+
+    - name: Create config-docker.sh script
+      copy:
+        content: |
+                 #!/bin/bash
+
+                 MACHINE_IP=$(docker-machine.exe ip default)
+
+                 export DOCKER_TLS_VERIFY="1"
+                 export DOCKER_HOST="tcp://$MACHINE_IP:2376"
+                 export DOCKER_CERT_PATH="/c/Users/{{windows_username}}/.docker/machine/machines/default"
+                 export DOCKER_MACHINE_NAME="default"
+                 export COMPOSE_CONVERT_WINDOWS_PATHS="true"
+
+                 eval /usr/bin/docker $@
+        dest: "/home/{{ansible_user_id}}/bin/config-docker.sh"
+
+    - name: Make config-docker.sh executable
+      file:
+        path: "/home/{{ansible_user_id}}/bin/config-docker.sh"
+        mode: "u+x"
+
+    - name: Alias docker command to config-docker.sh
+      shell: printf '\n%s\n' 'alias docker=~/bin/config-docker.sh' >> "/home/{{ansible_user_id}}/.bashrc"
