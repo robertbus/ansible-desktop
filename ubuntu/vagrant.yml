@@ -6,7 +6,7 @@
   become_method: sudo
   vars:
     tmpDir: /tmp/myPlaybook/vagrant
-    appVersion: "2.1.5"
+    appVersion: "2.2.2"
     # files
     appPackage: "vagrant_{{appVersion}}_x86_64.deb"
     sha256Sums: "vagrant_{{appVersion}}_SHA256SUMS"
