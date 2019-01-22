@@ -1,0 +1,15 @@
+---
+- name: Install AWS tools
+  hosts: localhost
+
+  tasks:
+    - name: Install packages
+      become: yes
+      become_user: root
+      become_method: sudo
+      apt:
+        name:
+          - awscli
+          - aws-shell
+        state: present
+        update_cache: yes
